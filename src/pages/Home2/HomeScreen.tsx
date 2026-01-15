@@ -1,37 +1,67 @@
-import React, { useState } from 'react';
-import { FlatList } from 'react-native';
-// Importa os estilos da mesma pasta
-import { Container, Header, Title, ContentCard, ListHeader, SectionTitle } from './styled';
-// Importa o componente da subpasta 'Components'
+import React, { useRef, useState } from 'react';
+import { Animated, TouchableOpacity, Text, View, FlatList } from 'react-native';
+import { Container, Header, Title, ContentCard } from './styled';
+import MapComponent from './Components/MapView';
 import { SpaceItem } from './Components/SpaceItem';
-// Importa os dados da subpasta 'Components'
 import mockData from './Components/data';
 
-const HomeScreen = ({ navigation }) => {
-  const handleOpenDetails = (item) => {
-    navigation.navigate('SpaceDetails', { item });
+const HomeScreen = ({ navigation }: any) => {
+  const opacityMap = useRef(new Animated.Value(0)).current;
+  const translateMap = useRef(new Animated.Value(1000)).current; 
+  const opacityList = useRef(new Animated.Value(1)).current;
+
+  const [mapVisible, setMapVisible] = useState(false);
+
+  const showMap = () => {
+    setMapVisible(true);
+    Animated.parallel([
+      Animated.timing(opacityMap, { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.timing(translateMap, { toValue: 0, duration: 500, useNativeDriver: true }),
+      Animated.timing(opacityList, { toValue: 0, duration: 500, useNativeDriver: true }),
+    ]).start();
+  };
+
+  const hideMap = () => {
+    Animated.parallel([
+      Animated.timing(opacityMap, { toValue: 0, duration: 500, useNativeDriver: true }),
+      Animated.timing(translateMap, { toValue: 1000, duration: 500, useNativeDriver: true }),
+      Animated.timing(opacityList, { toValue: 1, duration: 500, useNativeDriver: true }),
+    ]).start(() => setMapVisible(false));
   };
 
   return (
     <Container>
-      <Header>
-        <Title>GrowApp</Title>
-      </Header>
+      <MapComponent 
+        navigation={navigation}
+        onPressLocais={hideMap} 
+        style={{ 
+          opacity: opacityMap, 
+          transform: [{ translateY: translateMap }] 
+        }} 
+      />
 
-      <ContentCard>
-        <ListHeader>
-          <SectionTitle>Locais</SectionTitle>
-        </ListHeader>
+      <Animated.View style={{ flex: 1, opacity: opacityList }}>
+        <Header>
+          <Title style={{ textAlign: 'center',width: '100%' }}>GrowApp</Title>
+        </Header>
 
-        <FlatList
-          data={mockData}
-          keyExtractor={(item) => item.name}
-          renderItem={({ item }) => (
-            <SpaceItem item={item} onPress={() => handleOpenDetails(item)} />
-          )}
-          showsVerticalScrollIndicator={false}
-        />
-      </ContentCard>
+        <ContentCard>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 }}>
+            <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Locais</Text>
+            <TouchableOpacity onPress={showMap} style={{ backgroundColor: '#f0f0f0', padding: 8, borderRadius: 15 }}>
+              <Text style={{ color: '#44A266' }}>Ir mapa</Text>
+            </TouchableOpacity>
+          </View>
+
+          <FlatList
+            data={mockData}
+            keyExtractor={(item) => item.name}
+            renderItem={({ item }) => (
+              <SpaceItem item={item} onPress={() => navigation.navigate('SpaceDetails', { item })} />
+            )}
+          />
+        </ContentCard>
+      </Animated.View>
     </Container>
   );
 };

@@ -19,7 +19,7 @@ const AppRoutes = () => {
         <Stack.Screen
           name="SpaceDetails"
           component={SpaceDetailsScreen}
-          options={{ title: 'Detalhes' }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

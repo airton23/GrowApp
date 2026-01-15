@@ -38,12 +38,25 @@ const SpaceDetailsScreen = () => {
       <Header style={{ height: 160, justifyContent: 'flex-start' }}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}
+          style={{ 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            marginTop: 20, 
+            alignSelf: 'flex-start',
+            zIndex: 1
+          }}
         >
           <Icon name="chevron-left" color="#fff" size={30} />
-          <Text style={{ color: '#fff', fontSize: 16 }}>Voltar</Text>
+          <Text style={{ color: '#fff', fontSize: 20 }}>Voltar</Text>
         </TouchableOpacity>
-        <Title style={{ textAlign: 'center', marginTop: 5 }}>{item.name}</Title>
+        <Title style={{ 
+          textAlign: 'center', 
+          marginTop: 5, 
+          width: '100%', 
+          marginLeft: -20 
+        }}>
+          {item.name}
+        </Title>
       </Header>
 
       <ContentCard>

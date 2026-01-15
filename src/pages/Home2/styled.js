@@ -2,20 +2,19 @@ import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Animated } from 'react-native';
 
-export const Container = styled.View`
-  flex: 1;
-  background-color: #fff;
-`;
-
-export const Header = styled(LinearGradient).attrs({
-  colors: ["#44A266", "#C4D66A", "#ffffff"],
+export const Container = styled(LinearGradient).attrs({
+  colors: ["#44A266", "#C4D66A"],
   start: { x: 0, y: 0 },
   end: { x: 0, y: 1 },
 })`
-  height: 280px;
-  align-items: center;
-  justify-content: center;
+  flex: 1;
+`;
+
+export const Header = styled.View`
+  padding-horizontal: 20px;
   padding-top: 40px;
+  padding-bottom: 20px;
+  align-items: flex-start;
 `;
 
 export const Title = styled.Text`
@@ -25,18 +24,18 @@ export const Title = styled.Text`
   text-shadow: 0px 2px 4px rgba(0,0,0,0.2);
 `;
 
-export const ContentCard = styled(Animated.View)`
+export const ContentCard = styled.View`
   flex: 1;
-  background-color: #f5f5f5;
-  margin-top: -50px;
-  border-top-left-radius: 40px;
-  border-top-right-radius: 40px;
+  background-color: #fff;
+  margin-horizontal: 15px;
+  margin-bottom: 20px;
+  border-radius: 30px;
   padding: 20px;
-  elevation: 10;
-  shadow-color: #000;
-  shadow-offset: 0px -5px;
-  shadow-opacity: 0.1;
-  shadow-radius: 10px;
+  elevation: 5; /* Sombra no Android */
+  shadow-color: #000; /* Sombra no iOS */
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.2;
+  shadow-radius: 5px;
 `;
 
 export const ListHeader = styled.View`
