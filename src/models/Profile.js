@@ -1,5 +1,5 @@
 import { Model } from '@nozbe/watermelondb'
-import { field, action } from '@nozbe/watermelondb/decorators'
+import { field, writer } from '@nozbe/watermelondb/decorators'
 
 export default class Profile extends Model {
   static table = 'profile'
@@ -22,7 +22,7 @@ export default class Profile extends Model {
     @field('zip')
     zip
 
-    @action async addProfile(name, contact, property, location, adress, zip) {
+    @writer async addProfile(name, contact, property, location, adress, zip) {
         return await this.create(Profile => {
             Profile.name = name
             Profile.contact = contact

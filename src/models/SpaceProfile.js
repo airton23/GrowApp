@@ -1,5 +1,5 @@
 import { Model, Q } from '@nozbe/watermelondb'
-import { field, children, lazy, action, date, readonly } from '@nozbe/watermelondb/decorators'
+import { field, children, lazy, writer, date, readonly } from '@nozbe/watermelondb/decorators'
 
 export default class SpaceProfile extends Model {
     static table = 'spaces_profile'
@@ -118,7 +118,7 @@ export default class SpaceProfile extends Model {
     @date('play_at')
     play_at
 
-    @action async addSpaceProfile(name, kc) {
+    @writer async addSpaceProfile(name, kc) {
         return await this.create(SpaceProfile => {
             SpaceProfile.name = name
             SpaceProfile.kc = kc

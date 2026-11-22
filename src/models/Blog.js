@@ -1,5 +1,5 @@
 import { Model, Q } from '@nozbe/watermelondb'
-import { field, children, lazy, action } from '@nozbe/watermelondb/decorators'
+import { field, children, lazy, writer } from '@nozbe/watermelondb/decorators'
 
 export default class Blog extends Model {
   static table = 'blogs'
@@ -19,7 +19,7 @@ export default class Blog extends Model {
     .get('comments')
     .query(Q.on('posts', 'blog_id', this.id), Q.where('is_nasty', true))
 
-  @action async moderateAll() {
+  @writer async moderateAll() {
     await this.nastyComments.destroyAllPermanently()
   }
 }

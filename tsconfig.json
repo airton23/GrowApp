@@ -6,7 +6,25 @@
     "baseUrl": ".",
     "paths": {
       "@common": ["src/common"],
-      "@common/*": ["src/common/*"]
+      "@common/*": ["src/common/*"],
+      "@services": ["src/services"],
+      "@services/*": ["src/services/*"],
+      "@assets": ["src/assets"],
+      "@assets/*": ["src/assets/*"],
+      "@locales": ["src/locales"],
+      "@locales/*": ["src/locales/*"],
+      "@models": ["src/models"],
+      "@models/*": ["src/models/*"],
+      "@components": ["src/components"],
+      "@components/*": ["src/components/*"],
+      "@pages": ["src/pages"],
+      "@pages/*": ["src/pages/*"],
+      "@store": ["src/store"],
+      "@store/*": ["src/store/*"],
+      "@animations": ["src/animations"],
+      "@animations/*": ["src/animations/*"],
+      "@utils": ["src/utils"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }

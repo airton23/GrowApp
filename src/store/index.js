@@ -2,7 +2,7 @@ import { createStore } from 'redux';
 import { Reducers } from './ducks';
 import Reactotron from "../../ReactotronConfig";
 import { persistStore, persistReducer } from 'redux-persist';
-import { AsyncStorage } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const persistConfig = {
     key: 'root',

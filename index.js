@@ -6,7 +6,7 @@ import { name as appName } from './app.json';
 // --- PERSISTÊNCIA E BANCO ---
 import { Database } from '@nozbe/watermelondb';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
-import DatabaseProvider from '@nozbe/watermelondb/DatabaseProvider';
+import { DatabaseProvider } from '@nozbe/watermelondb/react';
 import { mySchema } from './src/models/schema';
 import Blog from './src/models/Blog';
 import Post from './src/models/Post';
