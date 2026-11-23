@@ -1,4 +1,4 @@
-export default t = {
+const t = {
     HOME_copilot_search: 'Buscar',
     SORT_BY: 'Ordenar por',
     ADD_NEW_LOCATION: 'Adicionar novo local',
@@ -197,4 +197,6 @@ Em caso de alterações significativas, poderemos também notificá-lo através 
 Contato
 
 Se você tiver qualquer dúvida ou preocupação sobre estes Termos de Uso de GPS, por favor, entre em contato conosco em bcccoworkingufape@gmail.com.`
-}
+};
+
+export default t;

@@ -1,16 +1,38 @@
-import React, { useRef, useState } from 'react';
-import { Animated, TouchableOpacity, Text, View, FlatList } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { Animated, TouchableOpacity, Text, View, FlatList, Modal, ScrollView, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 import { Container, Header, Title, ContentCard } from './styled';
 import MapComponent from './Components/MapView';
 import { SpaceItem } from './Components/SpaceItem';
 import mockData from './Components/data';
+import { string } from '../../locales';
+
+const TERMS_KEY = '@GrowApp:gpsTermsAccepted';
 
 const HomeScreen = ({ navigation }: any) => {
+  const savedSpaces = useSelector((state: any) => state.spaceState || []);
+  const spacesList = savedSpaces.length > 0 ? savedSpaces : mockData;
+
   const opacityMap = useRef(new Animated.Value(0)).current;
   const translateMap = useRef(new Animated.Value(1000)).current; 
   const opacityList = useRef(new Animated.Value(1)).current;
 
   const [mapVisible, setMapVisible] = useState(false);
+  const [termsVisible, setTermsVisible] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem(TERMS_KEY).then(val => {
+      if (!val) {
+        setTermsVisible(true);
+      }
+    });
+  }, []);
+
+  const acceptTerms = async () => {
+    await AsyncStorage.setItem(TERMS_KEY, 'true');
+    setTermsVisible(false);
+  };
 
   const showMap = () => {
     setMapVisible(true);
@@ -54,16 +76,73 @@ const HomeScreen = ({ navigation }: any) => {
           </View>
 
           <FlatList
-            data={mockData}
-            keyExtractor={(item) => item.name}
+            data={spacesList}
+            keyExtractor={(item, idx) => `${item.name}-${idx}`}
             renderItem={({ item }) => (
               <SpaceItem item={item} onPress={() => navigation.navigate('SpaceDetails', { item })} />
             )}
           />
         </ContentCard>
       </Animated.View>
+
+      <Modal visible={termsVisible} transparent animationType="fade">
+        <View style={styles.termsOverlay}>
+          <View style={styles.termsBox}>
+            <Text style={styles.termsTitle}>{string('term')}</Text>
+            <ScrollView style={styles.termsScroll}>
+              <Text style={styles.termsBody}>{string('termText')}</Text>
+            </ScrollView>
+            <TouchableOpacity style={styles.termsBtn} onPress={acceptTerms}>
+              <Text style={styles.termsBtnText}>{string('buttonAllow')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  termsOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  termsBox: {
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 20,
+    maxHeight: '80%',
+    width: '100%',
+  },
+  termsTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#222',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  termsScroll: {
+    marginBottom: 16,
+  },
+  termsBody: {
+    fontSize: 14,
+    color: '#444',
+    lineHeight: 20,
+  },
+  termsBtn: {
+    backgroundColor: '#44A266',
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  termsBtnText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
 
 export default HomeScreen;

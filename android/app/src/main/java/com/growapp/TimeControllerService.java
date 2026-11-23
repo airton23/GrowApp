@@ -10,6 +10,7 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import android.app.NotificationManager;
 import android.app.NotificationChannel;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.widget.Toast;
 import androidx.core.app.NotificationManagerCompat;
@@ -66,13 +67,18 @@ public class TimeControllerService extends Service {
         if (!isServiceStarted) {
             createNotificationChannel();
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("GrowApp: Time controller")
                     .setContentText("Running...")
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .build();
 
-            startForeground(SERVICE_NOTIFICATION_ID, notification);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(SERVICE_NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+            } else {
+                startForeground(SERVICE_NOTIFICATION_ID, notification);
+            }
             handler.postDelayed(runnableCode, 60000);
             isServiceStarted = true;
         }

@@ -7,11 +7,12 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import { Container, Header, Title } from '../Home2/styled';
 import { DeviceApi } from '../../services';
 
-const DeviceScreen = () => {
+const DeviceScreen = ({ navigation }: any) => {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [connectedDevices, setConnectedDevices] = useState([]);
@@ -64,8 +65,17 @@ const DeviceScreen = () => {
               Dispositivos conectados a rede
             </Text>
             {connectedDevices.length > 0 ? (
-              connectedDevices.map(item => (
-                <View key={item.host} style={styles.deviceCard}>
+              connectedDevices.map((item: any) => (
+                <TouchableOpacity
+                  key={item.host}
+                  style={styles.deviceCard}
+                  onPress={() =>
+                    navigation.navigate('DeviceDetails', {
+                      item,
+                      localType: true,
+                    })
+                  }
+                >
                   <Text style={styles.label}>
                     Host: <Text style={styles.value}>{item.host}</Text>
                   </Text>
@@ -78,7 +88,7 @@ const DeviceScreen = () => {
                       {DeviceApi.rssiToPorcent(item.rssi)}%
                     </Text>
                   </Text>
-                </View>
+                </TouchableOpacity>
               ))
             ) : (
               <Text style={styles.emptyText}>
@@ -88,8 +98,19 @@ const DeviceScreen = () => {
 
             <Text style={styles.sectionTitle}>Dispositivos fora da Rede</Text>
             {disconnectedDevices.length > 0 ? (
-              disconnectedDevices.map(item => (
-                <View key={item.BSSID} style={styles.deviceCardRow}>
+              disconnectedDevices.map((item: any) => (
+                <TouchableOpacity
+                  key={item.BSSID}
+                  style={styles.deviceCardRow}
+                  onPress={() =>
+                    navigation.navigate('DeviceDetails', {
+                      item,
+                      localType: false,
+                      ssidDevice: DeviceApi.getWifiName(item.BSSID),
+                      passDevice: '12345678',
+                    })
+                  }
+                >
                   <Image
                     source={require('../../assets/device01.png')}
                     style={styles.deviceImage}
@@ -105,7 +126,7 @@ const DeviceScreen = () => {
                       Sinal {item.level} dBm 📶
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))
             ) : (
               <Text style={styles.emptyText}>

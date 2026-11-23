@@ -25,6 +25,8 @@ import PushNotification from 'react-native-push-notification';
 
 // --- NATIVE MODULES ---
 import { NativeModules } from 'react-native';
+import { Creators as SpaceActions } from './src/store/ducks/space';
+import siaApi from './src/services/siaApi';
 const { TimeController } = NativeModules;
 
 // Configuração do WatermelonDB
@@ -36,7 +38,29 @@ const adapter = new SQLiteAdapter({
 const database = new Database({
     adapter,
     modelClasses: [SpaceProfile, Blog, Post, Comment, Profile],
-    actionsEnabled: true,
+});
+
+const timeController = async () => {
+    store.dispatch(SpaceActions.decreaseTime());
+};
+
+const timeControllerDaily = async () => {
+    const latitude = -8.668639;
+    const longitude = -37.682861;
+    const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
+    try {
+        const resposta = await siaApi.eto(latitude, longitude, today, today, 200);
+        if (resposta) {
+            store.dispatch(SpaceActions.updateEto(resposta));
+        }
+    } catch (error) {
+        console.log('ERRO ETO:', error);
+    }
+};
+
+PushNotification.configure({
+    onNotification: function () {},
+    requestPermissions: Platform.OS === 'ios',
 });
 
 // Componente Raiz Envolvido com os Providers
@@ -59,5 +83,7 @@ const RNRedux = () => {
     );
 };
 
-// Registro do App com suporte a Gestos
+// Registro do App com suporte a Gestos e Headless JS Tasks
 AppRegistry.registerComponent(appName, () => gestureHandlerRootHOC(RNRedux));
+AppRegistry.registerHeadlessTask('timeController', () => timeController);
+AppRegistry.registerHeadlessTask('dailyTaskController', () => timeControllerDaily);

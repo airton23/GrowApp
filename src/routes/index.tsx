@@ -7,6 +7,11 @@ import { Icon } from 'react-native-elements';
 import HomeScreen from '../pages/Home2/HomeScreen';
 import SpaceDetailsScreen from '../pages/Home2/SpaceDetailsScreen';
 import DeviceScreen from '../pages/Devices/DeviceScreen';
+import DeviceDetailsScreen from '../pages/Devices/DeviceDetailsScreen';
+import CultureListScreen from '../pages/CultureList/CultureListScreen';
+import CultureDetailsScreen from '../pages/CultureList/CultureDetailsScreen';
+import ProfileScreen from '../pages/Profile/ProfileScreen';
+import TakeStepScreen from '../pages/TakeStep/TakeStepScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,7 +44,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen 
         name="List" 
-        component={HomeScreen} // Substituir pela tela de lista futuramente
+        component={CultureListScreen}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Icon name="list" type="feather" color={color} size={focused ? 28 : 25} />
@@ -57,7 +62,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen 
         name="Profile" 
-        component={HomeScreen} // Substituir pela tela de perfil futuramente
+        component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Icon name="user" type="feather" color={color} size={focused ? 28 : 25} />
@@ -80,6 +85,21 @@ const AppRoutes = () => {
         <Stack.Screen
           name="SpaceDetails"
           component={SpaceDetailsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CultureDetails"
+          component={CultureDetailsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TakeStep"
+          component={TakeStepScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DeviceDetails"
+          component={DeviceDetailsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

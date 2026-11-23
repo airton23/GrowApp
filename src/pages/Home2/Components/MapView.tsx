@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Animated, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Animated, StyleSheet, ToastAndroid } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
+import siaApi from '../../../services/siaApi';
 
 interface MapProps {
   style?: any;
@@ -32,15 +33,44 @@ const MapComponent: React.FC<MapProps> = ({ style, onPressLocais, navigation }) 
     );
   }, []);
 
-  const handleLongPress = (e: any) => {
+  const getDateOffset = (offsetDays: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    const yyyy = d.getFullYear();
+    const mm = ('0' + (d.getMonth() + 1)).slice(-2);
+    const dd = ('0' + d.getDate()).slice(-2);
+    return `${yyyy}${mm}${dd}`;
+  };
+
+  const handleLongPress = async (e: any) => {
     const coords = e.nativeEvent.coordinate;
     setLoading(true);
-    
-    setTimeout(() => {
+    const dateStr = getDateOffset(-8);
+
+    try {
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), 4000),
+      );
+      const etoResponse: any = await Promise.race([
+        siaApi.eto(coords.latitude, coords.longitude, dateStr, dateStr, 200),
+        timeoutPromise,
+      ]);
       setLoading(false);
-      navigation.navigate('TakeStep', { coords });
-      onPressLocais(); 
-    }, 1500);
+      navigation.navigate('TakeStep', {
+        coords,
+        features: etoResponse?.features || [],
+        etoResponse,
+      });
+      onPressLocais();
+    } catch {
+      setLoading(false);
+      ToastAndroid.show(
+        'SIA offline: continuando com coordenadas locais',
+        ToastAndroid.SHORT,
+      );
+      navigation.navigate('TakeStep', { coords, features: [] });
+      onPressLocais();
+    }
   };
 
   return (

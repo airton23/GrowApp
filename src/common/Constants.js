@@ -1,8 +1,7 @@
 
-/* 173.82.232.87 */
-/* 192.168.0.14 */ 
-/* 192.168.1.10 */
+/* Emulador Android acessa o localhost do PC via 10.0.2.2 */
+/* Para celular físico na mesma rede Wi-Fi, troque pelo IP local do PC (ex: 192.168.18.155) */
 
 export default {
-    SIA_API_Address: '192.168.18.155'
+    SIA_API_Address: '10.0.2.2'
 }
